@@ -12,15 +12,9 @@ public static class Program
         Console.WriteLine("Welcome to weather monitoring service.");
 
         var configuration = ConfigurationInitializer.Initialize();
+        var appConfig = ConfigurationInitializer.GetConfigValue(configuration);
 
-        var appConfig = configuration.Get<AppConfig>();
-        if (appConfig == null)
-        {
-            Console.WriteLine("AppConfig is empty.");
-            return;
-        }
-
-        Console.WriteLine("Please enter your input:");
+        Console.WriteLine("Enter weather data:");
         var userInput = Console.ReadLine();
 
         var dataParserService = new DataParserService();
