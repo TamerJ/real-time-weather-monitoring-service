@@ -18,7 +18,7 @@ public static class Program
         var userInput = Console.ReadLine();
 
         var dataParserService = new DataParserService();
-        dataParserService.Parse(userInput);
+        dataParserService.Parse(userInput!);
 
         Console.ReadLine();
     }
