@@ -1,6 +1,6 @@
 ﻿namespace real_time_weather_monitoring_service.Models;
 
-public class WeatherStation
+public class WeatherData
 {
     public string Location { get; set; }
     public float Temperature { get; set; }

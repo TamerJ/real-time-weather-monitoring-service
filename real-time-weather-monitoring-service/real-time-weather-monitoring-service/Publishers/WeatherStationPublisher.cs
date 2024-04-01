@@ -6,7 +6,7 @@ namespace real_time_weather_monitoring_service.Publishers;
 public class WeatherStationPublisher : IPublisher
 {
     private readonly List<ISubscriber> _subscribers;
-    public WeatherStation State { get; set; }
+    public WeatherData State { get; set; }
 
     public WeatherStationPublisher(List<ISubscriber> subscribers)
     {

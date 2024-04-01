@@ -26,7 +26,7 @@ public static class RawDataParserHelper
     {
         try
         {
-            JsonConvert.DeserializeObject<WeatherStation>(inputData);
+            JsonConvert.DeserializeObject<WeatherData>(inputData);
             return true;
         }
         catch (Exception ex)
@@ -39,9 +39,9 @@ public static class RawDataParserHelper
     {
         try
         {
-            var serializer = new XmlSerializer(typeof(WeatherStation));
+            var serializer = new XmlSerializer(typeof(WeatherData));
             using var reader = new StringReader(inputData);
-            var obj = (WeatherStation) serializer.Deserialize(reader)!;
+            var obj = (WeatherData) serializer.Deserialize(reader)!;
             return true;
         }
         catch (Exception ex)
