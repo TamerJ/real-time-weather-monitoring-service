@@ -8,8 +8,25 @@ public static class WeatherBotHelper
     public static void ActivateWeatherBot(WeatherBot weatherBot)
     {
         weatherBot.Enabled = true;
+        PrintActivationMessage(weatherBot);
+    }
+
+    private static void PrintActivationMessage(WeatherBot weatherBot)
+    {
+        SetConsoleColor(ConsoleColor.Green);
         Console.WriteLine($"{weatherBot.Name} activated!");
         Console.WriteLine(weatherBot.Message);
+        ResetConsoleColor();
+    }
+
+    private static void SetConsoleColor(ConsoleColor color)
+    {
+        Console.ForegroundColor = color;
+    }
+
+    private static void ResetConsoleColor()
+    {
+        Console.ResetColor();
     }
 
     public static List<ISubscriber> InitializeWeatherBotMonitors(AppConfig appConfig)
