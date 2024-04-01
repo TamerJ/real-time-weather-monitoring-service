@@ -6,7 +6,7 @@ namespace real_time_weather_monitoring_service.Services;
 
 public class DataParserService : IDataParserService
 {
-    public WeatherBot Parse(string inputData)
+    public WeatherStation Parse(string inputData)
     {
         if (string.IsNullOrWhiteSpace(inputData))
         {
@@ -18,10 +18,10 @@ public class DataParserService : IDataParserService
         switch (parserType)
         {
             case ParserType.Json:
-                var jsonDeserializer = new JsonDeserializer<WeatherBot>();
+                var jsonDeserializer = new JsonDeserializer<WeatherStation>();
                 return jsonDeserializer.Deserialize(inputData) ?? throw new InvalidOperationException();
             case ParserType.Xml:
-                var xmlDeserializer = new XmlDeserializer<WeatherBot>();
+                var xmlDeserializer = new XmlDeserializer<WeatherStation>();
                 return xmlDeserializer.Deserialize(inputData) ?? throw new InvalidOperationException();
             case ParserType.Unknown:
                 throw new ArgumentException("Unknown input format. Please enter valid JSON or XML data.");

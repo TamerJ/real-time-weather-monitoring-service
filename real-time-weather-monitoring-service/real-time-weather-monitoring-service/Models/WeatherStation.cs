@@ -1,6 +1,6 @@
 ﻿namespace real_time_weather_monitoring_service.Models;
 
-public class WeatherBot
+public class WeatherStation
 {
     public string Location { get; set; }
     public float Temperature { get; set; }

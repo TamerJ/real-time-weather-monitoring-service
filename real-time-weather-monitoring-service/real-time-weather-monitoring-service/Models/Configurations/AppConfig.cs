@@ -2,7 +2,7 @@
 
 public class AppConfig
 {
-    public BotConfig? RainBot { get; set; }
-    public BotConfig? SunBot { get; set; }
-    public BotConfig? SnowBot { get; set; }
+    public WeatherBot? RainBot { get; set; }
+    public WeatherBot? SunBot { get; set; }
+    public WeatherBot? SnowBot { get; set; }
 }
