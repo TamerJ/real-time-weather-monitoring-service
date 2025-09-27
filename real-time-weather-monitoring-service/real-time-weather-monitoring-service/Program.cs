@@ -1,6 +1,7 @@
-﻿using real_time_weather_monitoring_service.Helpers;
+﻿using real_time_weather_monitoring_service.Services;
+using real_time_weather_monitoring_service.Helpers;
 using real_time_weather_monitoring_service.Publishers;
-using real_time_weather_monitoring_service.Services;
+using real_time_weather_monitoring_service.Subscribers;
 
 namespace real_time_weather_monitoring_service;
 
@@ -10,32 +11,58 @@ public static class Program
     {
         Console.WriteLine("Welcome to the weather monitoring service.");
 
+        // Load configuration from appsettings.json
         var configuration = ConfigurationInitializer.Initialize();
         var appConfig = ConfigurationInitializer.GetConfigValue(configuration);
 
-        var weatherBotMonitors = WeatherBotHelper.InitializeWeatherBotMonitors(appConfig);
-        if (weatherBotMonitors.Count == 0)
+        // Initialize publisher
+        var weatherStationPublisher = new WeatherStationPublisher();
+
+        // Dynamically inject bots based on config
+        foreach (var kvp in appConfig?.Bots)
         {
-            Console.WriteLine("No weather bot monitors found.");
-            return;
+            var botName = kvp.Key;
+            var botConfig = kvp.Value;
+
+            if (!botConfig.Enabled) continue;
+
+            botConfig.Name = botName;
+
+            IWeatherBot bot = botName.ToLowerInvariant() switch
+            {
+                "rainbot" => new RainBot(botConfig),
+                "sunbot" => new SunBot(botConfig),
+                "snowbot" => new SnowBot(botConfig),
+                _ => throw new InvalidOperationException($"Unknown bot type: {botName}")
+            };
+
+            weatherStationPublisher.Subscribe(bot);
         }
 
-        WeatherStationPublisher weatherStationPublisher = new(weatherBotMonitors);
-        var weatherBotParserService = new DataParserService();
+        // Initialize parser
+        IDataParserService parserService = new DataParserService();
 
+        // Main input loop
         while (true)
         {
             Console.WriteLine("Enter weather data (or 'Q' to quit):");
-            var weatherRawDataInput = Console.ReadLine();
+            var input = Console.ReadLine();
 
-            if (string.Equals(weatherRawDataInput, "Q", StringComparison.OrdinalIgnoreCase))
-            {
+            if (string.Equals(input, "Q", StringComparison.OrdinalIgnoreCase))
                 break;
-            }
 
-            var latestWeatherDataInput = weatherBotParserService.Parse(weatherRawDataInput!);
-            weatherStationPublisher.State = latestWeatherDataInput;
-            weatherStationPublisher.Notify();
+            try
+            {
+                var weatherData = parserService.Parse(input!);
+                weatherStationPublisher.State = weatherData;
+                weatherStationPublisher.Notify();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Error: {ex.Message}");
+                Console.ResetColor();
+            }
         }
 
         Console.WriteLine("Exiting weather monitoring service.");

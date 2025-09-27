@@ -3,31 +3,22 @@ using real_time_weather_monitoring_service.Subscribers;
 
 namespace real_time_weather_monitoring_service.Publishers;
 
-public class WeatherStationPublisher : IPublisher
+public class WeatherStationPublisher
 {
-    private readonly List<ISubscriber> _subscribers;
+    private readonly List<IWeatherBot> _subscribers = new();
     public WeatherData State { get; set; }
 
-    public WeatherStationPublisher(List<ISubscriber> subscribers)
+    public void Subscribe(IWeatherBot bot)
     {
-        _subscribers = subscribers;
-    }
-
-    public void Subscribe(ISubscriber subscriber)
-    {
-        _subscribers.Add(subscriber);
-    }
-
-    public void Unsubscribe(ISubscriber subscriber)
-    {
-        _subscribers.Remove(subscriber);
+        _subscribers.Add(bot);
     }
 
     public void Notify()
     {
-        foreach (var subscriber in _subscribers)
+        foreach (var bot in _subscribers)
         {
-            subscriber.Update(this);
+            bot.Evaluate(State);
         }
     }
 }
+

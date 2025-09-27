@@ -1,21 +1,43 @@
 ﻿using real_time_weather_monitoring_service.Models;
-using real_time_weather_monitoring_service.Subscribers;
 
 namespace real_time_weather_monitoring_service.Helpers;
 
 public static class WeatherBotHelper
 {
-    public static void ActivateWeatherBot(WeatherBot weatherBot)
+    /// <summary>
+    /// Prints a formatted activation message for a bot.
+    /// </summary>
+    public static void PrintActivationMessage(WeatherBotConfig config)
     {
-        weatherBot.Enabled = true;
-        PrintActivationMessage(weatherBot);
+        if (config == null || string.IsNullOrWhiteSpace(config.Name))
+        {
+            PrintError("Bot configuration is missing or unnamed.");
+            return;
+        }
+
+        SetConsoleColor(ConsoleColor.Green);
+        Console.WriteLine($"{config.Name} activated!");
+        Console.WriteLine(config.Message);
+        ResetConsoleColor();
     }
 
-    private static void PrintActivationMessage(WeatherBot weatherBot)
+    /// <summary>
+    /// Prints an error message in red.
+    /// </summary>
+    public static void PrintError(string message)
+    {
+        SetConsoleColor(ConsoleColor.Red);
+        Console.WriteLine($"Error: {message}");
+        ResetConsoleColor();
+    }
+
+    /// <summary>
+    /// Prints a success message in green.
+    /// </summary>
+    public static void PrintSuccess(string message)
     {
         SetConsoleColor(ConsoleColor.Green);
-        Console.WriteLine($"{weatherBot.Name} activated!");
-        Console.WriteLine(weatherBot.Message);
+        Console.WriteLine(message);
         ResetConsoleColor();
     }
 
@@ -27,32 +49,5 @@ public static class WeatherBotHelper
     private static void ResetConsoleColor()
     {
         Console.ResetColor();
-    }
-
-    public static List<ISubscriber> InitializeWeatherBotMonitors(AppConfig appConfig)
-    {
-        if (appConfig == null)
-        {
-            throw new ArgumentNullException(nameof(appConfig));
-        }
-
-        var subscribers = new List<ISubscriber>();
-
-        if (appConfig.SunBot != null)
-        {
-            subscribers.Add(new SunBotMonitor(appConfig.SunBot));
-        }
-
-        if (appConfig.RainBot != null)
-        {
-            subscribers.Add(new RainBotMonitor(appConfig.RainBot));
-        }
-
-        if (appConfig.SnowBot != null)
-        {
-            subscribers.Add(new SnowBotMonitor(appConfig.SnowBot));
-        }
-
-        return subscribers;
     }
 }

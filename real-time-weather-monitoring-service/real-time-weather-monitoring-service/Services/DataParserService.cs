@@ -9,24 +9,15 @@ public class DataParserService : IDataParserService
     public WeatherData Parse(string inputData)
     {
         if (string.IsNullOrWhiteSpace(inputData))
-        {
-            throw new ArgumentException("Input data is null or empty.");
-        }
+            throw new ArgumentException("Input data is empty.");
 
         var parserType = RawDataParserHelper.DetermineParserType(inputData);
 
-        switch (parserType)
+        return parserType switch
         {
-            case ParserType.Json:
-                var jsonDeserializer = new JsonDeserializer<WeatherData>();
-                return jsonDeserializer.Deserialize(inputData) ?? throw new InvalidOperationException();
-            case ParserType.Xml:
-                var xmlDeserializer = new XmlDeserializer<WeatherData>();
-                return xmlDeserializer.Deserialize(inputData) ?? throw new InvalidOperationException();
-            case ParserType.Unknown:
-                throw new ArgumentException("Unknown input format. Please enter valid JSON or XML data.");
-            default:
-                throw new ArgumentException("Invalid input format. Please enter valid JSON or XML data.");
-        }
+            ParserType.Json => new JsonDeserializer<WeatherData>().Deserialize(inputData),
+            ParserType.Xml => new XmlDeserializer<WeatherData>().Deserialize(inputData),
+            _ => throw new ArgumentException("Unknown input format.")
+        };
     }
 }
