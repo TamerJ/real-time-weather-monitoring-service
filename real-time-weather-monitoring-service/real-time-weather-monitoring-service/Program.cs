@@ -1,4 +1,5 @@
-﻿using real_time_weather_monitoring_service.Services;
+﻿using real_time_weather_monitoring_service.Factories;
+using real_time_weather_monitoring_service.Services;
 using real_time_weather_monitoring_service.Helpers;
 using real_time_weather_monitoring_service.Publishers;
 using real_time_weather_monitoring_service.Subscribers;
@@ -19,23 +20,16 @@ public static class Program
         var weatherStationPublisher = new WeatherStationPublisher();
 
         // Dynamically inject bots based on config
-        foreach (var kvp in appConfig?.Bots)
+        foreach (var kvp in appConfig.Bots)
         {
             var botName = kvp.Key;
             var botConfig = kvp.Value;
 
-            if (!botConfig.Enabled) continue;
-
             botConfig.Name = botName;
 
-            IWeatherBot bot = botName.ToLowerInvariant() switch
-            {
-                "rainbot" => new RainBot(botConfig),
-                "sunbot" => new SunBot(botConfig),
-                "snowbot" => new SnowBot(botConfig),
-                _ => throw new InvalidOperationException($"Unknown bot type: {botName}")
-            };
+            if (!botConfig.Enabled) continue;
 
+            IWeatherBot bot = WeatherBotFactory.Create(botName, botConfig);
             weatherStationPublisher.Subscribe(bot);
         }
 

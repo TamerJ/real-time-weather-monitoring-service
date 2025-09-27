@@ -1,7 +1,9 @@
-﻿using real_time_weather_monitoring_service.Models;
+﻿using real_time_weather_monitoring_service.Attributes;
+using real_time_weather_monitoring_service.Models;
 
 namespace real_time_weather_monitoring_service.Subscribers;
 
+[BotName("RainBot")]
 public class RainBot : IWeatherBot
 {
     private readonly WeatherBotConfig _config;
