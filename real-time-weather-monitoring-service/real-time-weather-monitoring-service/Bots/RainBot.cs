@@ -17,7 +17,7 @@ public class RainBot : IWeatherBot
     {
         if (_config.Enabled && data.Humidity > _config.HumidityThreshold)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"{_config.Name} activated!");
             Console.WriteLine($"{_config.Message}");
             Console.ResetColor();

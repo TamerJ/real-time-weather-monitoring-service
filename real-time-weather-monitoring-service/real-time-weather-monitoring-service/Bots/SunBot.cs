@@ -3,21 +3,21 @@ using real_time_weather_monitoring_service.Models;
 
 namespace real_time_weather_monitoring_service.Subscribers;
 
-[BotName("SnowBot")]
-public class SnowBot : IWeatherBot
+[BotName("SunBot")]
+public class SunBot : IWeatherBot
 {
     private readonly WeatherBotConfig _config;
 
-    public SnowBot(WeatherBotConfig config)
+    public SunBot(WeatherBotConfig config)
     {
         _config = config;
     }
 
     public void Evaluate(WeatherData data)
     {
-        if (data.Temperature < _config.TemperatureThreshold)
+        if (data.Temperature > _config.TemperatureThreshold)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"{_config.Name} activated!");
             Console.WriteLine($"{_config.Message}");
             Console.ResetColor();

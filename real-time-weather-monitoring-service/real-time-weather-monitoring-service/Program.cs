@@ -1,8 +1,8 @@
-﻿using real_time_weather_monitoring_service.Factories;
-using real_time_weather_monitoring_service.Services;
+﻿using System.Text;
+using real_time_weather_monitoring_service.Factories;
 using real_time_weather_monitoring_service.Helpers;
 using real_time_weather_monitoring_service.Publishers;
-using real_time_weather_monitoring_service.Subscribers;
+
 
 namespace real_time_weather_monitoring_service;
 
@@ -10,16 +10,34 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        Console.WriteLine("Welcome to the weather monitoring service.");
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.WriteLine("🌤️ Welcome to the Real-Time Weather Monitoring Service!");
 
-        // Load configuration from appsettings.json
+        // Load configuration
         var configuration = ConfigurationInitializer.Initialize();
         var appConfig = ConfigurationInitializer.GetConfigValue(configuration);
 
-        // Initialize publisher
         var weatherStationPublisher = new WeatherStationPublisher();
 
-        // Dynamically inject bots based on config
+        // Display bot status from configuration
+        Console.WriteLine("\n🔍 Weather Bot Status:");
+        var allBotNames = WeatherBotFactory.GetAvailableBotNames();
+
+        var subscribed = allBotNames
+            .Where(name => appConfig.Bots.TryGetValue(name, out var cfg) && cfg.Enabled)
+            .ToList();
+
+        var unsubscribed = allBotNames.Except(subscribed);
+
+        foreach (var name in subscribed)
+            Console.WriteLine($"✅ {name} → Subscribed");
+
+        foreach (var name in unsubscribed)
+            Console.WriteLine($"⚠️ {name} → Not Subscribed");
+
+        // Subscribe active bots
+        Console.WriteLine("\n📡 Subscribing active bots...\n");
+
         foreach (var kvp in appConfig.Bots)
         {
             var botName = kvp.Key;
@@ -29,36 +47,47 @@ public static class Program
 
             if (!botConfig.Enabled) continue;
 
-            IWeatherBot bot = WeatherBotFactory.Create(botName, botConfig);
+            var bot = WeatherBotFactory.Create(botName, botConfig);
             weatherStationPublisher.Subscribe(bot);
         }
 
-        // Initialize parser
-        IDataParserService parserService = new DataParserService();
+        // Input loop
+        Console.WriteLine("📥 Paste raw weather data (XML or JSON). Type 'Q' to quit.\n");
 
-        // Main input loop
         while (true)
         {
-            Console.WriteLine("Enter weather data (or 'Q' to quit):");
-            var input = Console.ReadLine();
+            Console.Write("Input > ");
+            var input = Console.ReadLine()?.Trim();
 
             if (string.Equals(input, "Q", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("\n👋 Shutting down weather monitoring service...");
                 break;
+            }
 
             try
             {
-                var weatherData = parserService.Parse(input!);
+                var (detectedType, parser) = ParserFactory.CreateWithType(input!);
+                Console.WriteLine($"🔍 Detected format: {detectedType}");
+
+                var weatherData = parser.Parse(input!);
+
                 weatherStationPublisher.State = weatherData;
                 weatherStationPublisher.Notify();
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(
+                    $"✅ Published: {weatherData.Location}, {weatherData.Temperature}°C, {weatherData.Humidity}%");
+                Console.ResetColor();
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"❌ Error: {ex.Message}");
                 Console.ResetColor();
             }
         }
 
-        Console.WriteLine("Exiting weather monitoring service.");
+        Console.WriteLine("👋 Exiting weather monitoring service.");
     }
 }
