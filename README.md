@@ -4,68 +4,7 @@
 
 This C# console application simulates a real-time weather monitoring and reporting system. It ingests weather data from various stations in multiple formats (JSON, XML), dynamically activates weather bots based on configurable thresholds, and demonstrates extensible architecture principles.
 
-## 🚀 Features
-
-* Supports multiple input formats: JSON, XML, (YAML-ready via parser extension)
-* Modular bot architecture (RainBot, SunBot, SnowBot)
-* Configuration-driven behavior and thresholds
-* Plug-and-play format detection and parsing
-* Extensible design following SOLID principles
-
-## 🛠️ How to Run
-
-1. Clone the repository
-
-2. Ensure `.NET 6.0+` is installed 
-3. Make sure `appsettings.json` is copied to the output directory if newer:
-```xml
-<ItemGroup>
-   <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-   </None>
-</ItemGroup>  
-```
-4. Run the application via CLI:
-
-   ```bash
-   dotnet run
-   ```
-
-5. Enter weather data when prompted:
-
-   ```json
-   { "Location": "Seattle", "Temperature": 32, "Humidity": 40 }
-   ```
-
-   or
-
-   ```xml
-   <WeatherData><Location>Seattle</Location><Temperature>32</Temperature><Humidity>40</Humidity></WeatherData>
-   ```
-
-📂 Supported Formats
-
-### JSON
-
-```json
-{
-  "Location": "City Name",
-  "Temperature": 23.0,
-  "Humidity": 85.0
-}
-```
-
-### XML
-
-```xml
-<WeatherData>
-  <Location>City Name</Location>
-  <Temperature>23.0</Temperature>
-  <Humidity>85.0</Humidity>
-</WeatherData>
-```
-
-## 🤖 Weather Bot Types
+## 🌦️ Weather Bot Types
 
 Each bot is activated based on weather thresholds defined in the configuration file:
 
@@ -95,6 +34,21 @@ Each bot is activated based on weather thresholds defined in the configuration f
 }
 ```
 
+## 🚀 Features
+
+* Supports multiple input formats: JSON, XML, (YAML-ready via parser extension)
+* Modular bot architecture (RainBot, SunBot, SnowBot)
+* Configuration-driven behavior and thresholds
+* Plug-and-play format detection and parsing
+* Extensible design following SOLID principles
+
+## 🖼️ Demonstrations
+
+* ⚡ App Started <br> ![App-Started.png](./assets/App-Started.png)
+* ✅ JSON input handling <br> ![Json-triggered.png](./assets/Json-triggered.png)
+* 🧾 XML input handling  <br> ![xml-parser.png](./assets/xml-parser.png)
+* 🤖 Multi-bot activation based on input  <br> ![multi-bot-activated.png](./assets/multi-bot-activated.png)
+
 ## 🧪 Sample Interaction
 
 **Input:**
@@ -109,6 +63,38 @@ Each bot is activated based on weather thresholds defined in the configuration f
 SunBot activated!
 SunBot: "Wow, it's a scorcher out there!"
 ```
+
+## 🛠️ How to Run
+
+1. Clone the repository
+
+2. Ensure `.NET 6.0+` is installed 
+3. Make sure `appsettings.json` is copied to the output directory if newer:
+```xml
+<ItemGroup>
+   <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+   </None>
+</ItemGroup>  
+```
+4. Run the application via CLI:
+
+   ```bash
+   dotnet run
+   ```
+
+5. Enter Weather Data
+When prompted, enter weather data in **any supported format**:
+
+   ```json
+   { "Location": "Seattle", "Temperature": 32, "Humidity": 40 }
+   ```
+
+   or
+
+   ```xml
+   <WeatherData><Location>Seattle</Location><Temperature>32</Temperature><Humidity>40</Humidity></WeatherData>
+   ```
 
 ## 📊 Architecture Highlights
 
@@ -140,14 +126,8 @@ dotnet test
 
 ![App-Started.png](./assets/Unit-Test-Sample-Run.png)
 
-## 🖼️ Demonstrations
-* 🫰 App started <br> ![App-Started.png](./assets/App-Started.png)
-* ✅ JSON-Input bot activation <br> ![Json-triggered.png](./assets/Json-triggered.png)
-* 🧾 XML input handling  <br> ![xml-parser.png](./assets/xml-parser.png)
-* 🤖 Multi-bot activation based on input  <br> ![multi-bot-activated.png](./assets/multi-bot-activated.png)
 
 ## 🔮 Future Enhancements
 
 * Add structured logging
 * Support additional formats as needed (YAML, CSV)
-
