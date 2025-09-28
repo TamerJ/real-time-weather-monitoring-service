@@ -138,12 +138,13 @@ Run tests via:
 dotnet test
 ```
 
+![App-Started.png](./assets/Unit-Test-Sample-Run.png)
+
 ## 🖼️ Demonstrations
-* 🫰 App started ![App-Started.png](./assets/App-Started.png)
-* ✅ JSON-triggered bot activation
-* 🔄 Continuous data feed updates
-* 🧾 XML input handling
-* 🔀 Mixed format acceptance
+* 🫰 App started <br> ![App-Started.png](./assets/App-Started.png)
+* ✅ JSON-Input bot activation <br> ![Json-triggered.png](./assets/Json-triggered.png)
+* 🧾 XML input handling  <br> ![xml-parser.png](./assets/xml-parser.png)
+* 🤖 Multi-bot activation based on input  <br> ![multi-bot-activated.png](./assets/multi-bot-activated.png)
 
 ## 🔮 Future Enhancements
 

@@ -2,7 +2,7 @@
 
 namespace real_time_weather_monitoring_service.Models;
 
-[XmlRoot("WeatherData")]
+[XmlRoot("weatherdata")]
 public class WeatherData
 {
     [XmlElement("location")]
