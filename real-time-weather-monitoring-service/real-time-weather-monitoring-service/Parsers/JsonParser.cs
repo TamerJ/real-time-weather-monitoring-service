@@ -6,8 +6,18 @@ namespace real_time_weather_monitoring_service.Parsers;
 
 public class JsonParser : IDataParser
 {
-    public WeatherData Parse(string input)
+    public WeatherData? Parse(string input)
     {
-        return JsonSerializer.Deserialize<WeatherData>(input)!;
+        try
+        {
+            return JsonSerializer.Deserialize<WeatherData>(input, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
+        catch
+        {
+            return null;
+        }
     }
 }
