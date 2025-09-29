@@ -48,6 +48,7 @@ Each bot is activated based on weather thresholds defined in the configuration f
 * ✅ JSON input handling <br> ![Json-triggered.png](./assets/Json-triggered.png)
 * 🧾 XML input handling  <br> ![xml-parser.png](./assets/xml-parser.png)
 * 🤖 Multi-bot activation based on input  <br> ![multi-bot-activated.png](./assets/multi-bot-activated.png)
+* ⛄ Snow-bot activated  <br> ![snow-activated.png](./assets/multi-bot-activated.png)
 
 ## 🧪 Sample Interaction
 
