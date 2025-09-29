@@ -1,8 +1,14 @@
 # 🌦️ Real-Time Weather Monitoring Service
 
 ## 📌 Project Overview
+This C# console application simulates a real-time weather monitoring and reporting system.  
 
-This C# console application simulates a real-time weather monitoring and reporting system. It ingests weather data from various stations in multiple formats (JSON, XML), dynamically activates weather bots based on configurable thresholds, and demonstrates extensible architecture principles.
+Key behaviors:  
+
+* **Configuration-driven startup**: Reads `appsettings.json` to determine which weather bots are active.  
+* **Multi-format input**: Ingests weather data from JSON or XML (YAML-ready via parser extension).  
+* **Dynamic bot activation**: Bots activate based on configurable thresholds for temperature and humidity.  
+* **Extensible design**: Follows SOLID principles for modular, maintainable architecture.  
 
 ## 🌦️ Weather Bot Types
 
@@ -34,14 +40,6 @@ Each bot is activated based on weather thresholds defined in the configuration f
 }
 ```
 
-## 🚀 Features
-
-* Supports multiple input formats: JSON, XML, (YAML-ready via parser extension)
-* Modular bot architecture (RainBot, SunBot, SnowBot)
-* Configuration-driven behavior and thresholds
-* Plug-and-play format detection and parsing
-* Extensible design following SOLID principles
-
 ## 🖼️ Demonstrations
 * ⚡ App Started <br> ![App-Started.png](./assets/App-Started.png)
 * ✅ JSON input handling (Sun bot activated) <br> ![Json-triggered.png](./assets/Json-triggered.png)
@@ -49,6 +47,16 @@ Each bot is activated based on weather thresholds defined in the configuration f
 * 🤖 Multi-bot activation based on input (Sun & Rain bots activated) <br> ![multi-bot-activated.png](./assets/multi-bot-activated.png)
 * ⛄ Snow-bot activated (enabled in configuration file) <br> ![snow-activated.png](./assets/snow-activated.png)
 
+## 🎮 The program flow:
+
+1. Load configuration and initialize active bots.  
+2. Wait for user input (weather data).  
+3. Detect input format via `ParserFactory`.  
+4. Parse input into structured `WeatherData`.  
+5. Publish data through `WeatherStationPublisher`.  
+6. Notify subscribed bots (`RainBot`, `SunBot`, `SnowBot`) to evaluate and act.
+
+   
 ## 🧩 Architecture Overview
 
 ```mermaid
