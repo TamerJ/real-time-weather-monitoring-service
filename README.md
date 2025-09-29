@@ -65,10 +65,9 @@ flowchart TD
     D --> F[WeatherData]
     E --> F[WeatherData]
     F --> G[WeatherStationPublisher]
-    G --> H[Bot Activation Service]
-    H --> I[RainBot]
-    H --> J[SunBot]
-    H --> K[SnowBot]
+    G --> I[RainBot]
+    G --> J[SunBot]
+    G --> K[SnowBot]
 
 ```
 
@@ -93,6 +92,42 @@ SunBot activated!
 SunBot: "Wow, it's a scorcher out there!"
 ```
 
+## 📂 Project Structure
+```
+real-time-weather-monitoring-service/
+├── appsettings.json               # Configuration for bots and thresholds
+├── Program.cs                     # Entry point of the application
+├── real-time-weather-monitoring-service.csproj  # Project file
+├── Attributes/
+│   └── BotNameAttribute.cs        # Custom attribute to assign names to bots
+├── Bots/                          # Bot implementations reacting to weather data
+│   ├── IWeatherBot.cs             # Interface for all weather bots
+│   ├── RainBot.cs                 # Activates when humidity exceeds threshold
+│   ├── SnowBot.cs                 # Activates when temperature drops below threshold
+│   └── SunBot.cs                  # Activates when temperature exceeds threshold
+├── Enums/
+│   └── ParserType.cs              # Enum for supported data formats
+├── Factories/
+│   ├── ParserFactory.cs           # Creates the appropriate parser based on input
+│   └── WeatherBotFactory.cs       # Instantiates bots based on configuration
+├── FormatDetection/               # Classes for detecting input data format
+│   ├── IFormatDetector.cs         # Interface for format detectors
+│   ├── JsonFormatDetector.cs      # Detects JSON formatted input
+│   └── XmlFormatDetector.cs       # Detects XML formatted input
+├── Helpers/
+│   └── ConfigurationInitializer.cs  # Loads and parses app configuration
+├── Models/                        # Data structures used across the app
+│   ├── WeatherData.cs             # Represents parsed weather data
+│   └── Configurations/
+│       ├── AppConfig.cs           # Holds app-wide configuration
+│       └── WeatherBotConfig.cs    # Holds bot-specific configuration
+├── Parsers/                       # Parsers converting raw input into WeatherData
+│   ├── IDataParser.cs             # Interface for parsers
+│   ├── JsonParser.cs              # Parses JSON input
+│   └── XmlParser.cs               # Parses XML input
+└── Publishers/
+└── WeatherStationPublisher.cs # Publishes weather updates to subscribed bots
+```
 
 
 ## ✅ Testing Strategy
