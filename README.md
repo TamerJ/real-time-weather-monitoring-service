@@ -22,20 +22,25 @@ Each bot is activated based on weather thresholds defined in the configuration f
 
 ```json
 {
-  "RainBot": {
-    "enabled": true,
-    "humidityThreshold": 70,
-    "message": "It looks like it's about to pour down!"
-  },
-  "SunBot": {
-    "enabled": true,
-    "temperatureThreshold": 30,
-    "message": "Wow, it's a scorcher out there!"
-  },
-  "SnowBot": {
-    "enabled": false,
-    "temperatureThreshold": 0,
-    "message": "Brrr, it's getting chilly!"
+  "Bots": {
+    "RainBot": {
+      "enabled": true,
+      "humidityThreshold": 70,
+      "temperatureThreshold": 0,
+      "message": "It looks like it's about to pour down!"
+    },
+    "SunBot": {
+      "enabled": true,
+      "temperatureThreshold": 30,
+      "humidityThreshold": 0,
+      "message": "Wow, it's a scorcher out there!"
+    },
+    "SnowBot": {
+      "enabled": false,
+      "temperatureThreshold": 0,
+      "humidityThreshold": 0,
+      "message": "Brrr, it's getting chilly!"
+    }
   }
 }
 ```
