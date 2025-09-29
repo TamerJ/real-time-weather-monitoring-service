@@ -1,45 +1,20 @@
-<h1>Real-Time Weather Service</h1>
+# 🌦️ Real-Time Weather Monitoring Service
 
-Design and implement a C# console application that simulates a real-time weather monitoring and reporting service. The system should be capable of receiving and processing raw weather data in multiple formats (JSON, XML, etc.) from various weather stations for different locations. The application should include different types of 'weather bots' each of which is configured to behave differently based on the weather updates it receives.
+## 📌 Project Overview
 
-Supported Input Formats:
+This C# console application simulates a real-time weather monitoring and reporting system. It ingests weather data from various stations in multiple formats (JSON, XML), dynamically activates weather bots based on configurable thresholds, and demonstrates extensible architecture principles.
 
-JSON Format:
-```
-{
-  "Location": "City Name",
-  "Temperature": 23.0,
-  "Humidity": 85.0
-}
-```
+## 🌦️ Weather Bot Types
 
-<b>XML Format:</b>
-```
-<WeatherData>
-  <Location>City Name</Location>
-  <Temperature>23.0</Temperature>
-  <Humidity>85.0</Humidity>
-</WeatherData>
-```
+Each bot is activated based on weather thresholds defined in the configuration file:
 
-The system should allow for the addition of new data formats with minimal changes to the existing code, demonstrating the Open-Closed principle of SOLID design principles.
+* **RainBot**: Activates when humidity exceeds its threshold
+* **SunBot**: Activates when temperature exceeds its threshold
+* **SnowBot**: Activates when temperature drops below its threshold
 
-Different Bot Types:
-RainBot: This bot gets activated when the humidity level exceeds a certain limit specified in its configuration. Upon activation, it performs a specific action which involves printing a pre-configured message.
-SunBot: This bot gets activated when the temperature rises above a certain limit specified in its configuration. Upon activation, it performs a specific action which involves printing a pre-configured message.
-SnowBot: This bot is activated when the temperature drops below a certain limit specified in its configuration. Upon activation, it performs a specific action which involves printing a pre-configured message.
-Example on How to Interact with the Application:
-User starts the application, the system prompts: Enter weather data:.
+### Sample Bot Configuration
 
-User enters data in JSON format: ```{"Location": "City Name", "Temperature": 32, "Humidity": 40} or XML format: <WeatherData><Location>City Name</Location><Temperature>32</Temperature><Humidity>40</Humidity></WeatherData>```
-
-The system responds by activating the bots according to the provided weather data and the bots' configurations. If SunBot is enabled and its temperature threshold is lower than the given temperature, the system may respond with:
-
-SunBot activated!
-SunBot: "Wow, it's a scorcher out there!"
-Configuration Details:
-All the bot's settings should be controlled via a configuration file, including whether it is enabled, the threshold that activates it,
-```
+```json
 {
   "RainBot": {
     "enabled": true,
@@ -58,34 +33,161 @@ All the bot's settings should be controlled via a configuration file, including 
   }
 }
 ```
-In this example, the enabled property turns the bot on or off, the humidityThreshold or temperatureThreshold sets the limit that will activate the bot, and message is what the bot will output when it is activated.
+
+## 🚀 Features
+
+* Supports multiple input formats: JSON, XML, (YAML-ready via parser extension)
+* Modular bot architecture (RainBot, SunBot, SnowBot)
+* Configuration-driven behavior and thresholds
+* Plug-and-play format detection and parsing
+* Extensible design following SOLID principles
+
+## 🖼️ Demonstrations
+* ⚡ App Started <br> ![App-Started.png](./assets/App-Started.png)
+* ✅ JSON input handling (Sun bot activated) <br> ![Json-triggered.png](./assets/Json-triggered.png)
+* 🧾 XML input handling  (Rain bot activated) <br> ![xml-parser.png](./assets/xml-parser.png)
+* 🤖 Multi-bot activation based on input (Sun & Rain bots activated) <br> ![multi-bot-activated.png](./assets/multi-bot-activated.png)
+* ⛄ Snow-bot activated (enabled in configuration file) <br> ![snow-activated.png](./assets/snow-activated.png)
+
+## 🧩 Architecture Overview
+
+```mermaid
+---
+config:
+  look: classic
+  theme: neo
+---
+flowchart TD
+    A[User Input] --> B[Format Detection]
+    B --> C{ParserFactory}
+    C --> D[JsonParser]
+    C --> E[XmlParser]
+    D --> F[WeatherData]
+    E --> F[WeatherData]
+    F --> G[WeatherStationPublisher]
+    G --> I[RainBot]
+    G --> J[SunBot]
+    G --> K[SnowBot]
+
+```
+
+* **Format Detection** routes input to the correct parser via `ParserFactory`
+* **Parsers** convert raw input into structured `WeatherData`
+* **Publisher** broadcasts updates to subscribed bots
+* **Bots** activate based on thresholds defined in `appsettings.json`
 
 
-<h2>Integration Diagram</h2>
+## 🧪 Sample Interaction
 
-![Screenshot_36](https://github.com/TamerJ/real-time-weather-monitoring-service/assets/17861953/4387c76b-e54a-453c-b976-22c340356171)
+**Input:**
 
-![Screenshot_35](https://github.com/TamerJ/real-time-weather-monitoring-service/assets/17861953/9f62fb6e-45f5-4bac-9d88-7b34f02ea32d)
+```json
+{ "Location": "San Jose", "Temperature": 32, "Humidity": 40 }
+```
+
+**Output:**
+
+```
+SunBot activated!
+SunBot: "Wow, it's a scorcher out there!"
+```
+
+## 📂 Project Structure
+```
+real-time-weather-monitoring-service/
+├── appsettings.json               # Configuration for bots and thresholds
+├── Program.cs                     # Entry point of the application
+├── real-time-weather-monitoring-service.csproj  # Project file
+├── Attributes/
+│   └── BotNameAttribute.cs        # Custom attribute to assign names to bots
+├── Bots/                          # Bot implementations reacting to weather data
+│   ├── IWeatherBot.cs             # Interface for all weather bots
+│   ├── RainBot.cs                 # Activates when humidity exceeds threshold
+│   ├── SnowBot.cs                 # Activates when temperature drops below threshold
+│   └── SunBot.cs                  # Activates when temperature exceeds threshold
+├── Enums/
+│   └── ParserType.cs              # Enum for supported data formats
+├── Factories/
+│   ├── ParserFactory.cs           # Creates the appropriate parser based on input
+│   └── WeatherBotFactory.cs       # Instantiates bots based on configuration
+├── FormatDetection/               # Classes for detecting input data format
+│   ├── IFormatDetector.cs         # Interface for format detectors
+│   ├── JsonFormatDetector.cs      # Detects JSON formatted input
+│   └── XmlFormatDetector.cs       # Detects XML formatted input
+├── Helpers/
+│   └── ConfigurationInitializer.cs  # Loads and parses app configuration
+├── Models/                        # Data structures used across the app
+│   ├── WeatherData.cs             # Represents parsed weather data
+│   └── Configurations/
+│       ├── AppConfig.cs           # Holds app-wide configuration
+│       └── WeatherBotConfig.cs    # Holds bot-specific configuration
+├── Parsers/                       # Parsers converting raw input into WeatherData
+│   ├── IDataParser.cs             # Interface for parsers
+│   ├── JsonParser.cs              # Parses JSON input
+│   └── XmlParser.cs               # Parses XML input
+└── Publishers/
+└── WeatherStationPublisher.cs # Publishes weather updates to subscribed bots
+```
 
 
-<h2>Demonstrations: Run Screenshots</h2>
+## ✅ Testing Strategy
 
-👇 In this example, Two bots were triggered as the incoming weather data met their conditions successfully. Utilizing JSON Format
-![Screenshot_40](https://github.com/TamerJ/real-time-weather-monitoring-service/assets/17861953/cdebff67-8444-4dd7-be30-7f5c1bd9b7a5)
+Unit tests cover:
 
+* Format detection and parser selection
+* Weather data parsing (JSON, XML)
+* Bot activation logic based on thresholds
+* Configuration loading and validation
 
-👇 In this example, it demonstrates that the data feed (user input) continues to arrive, and the bots update accordingly.
-![Screenshot_41](https://github.com/TamerJ/real-time-weather-monitoring-service/assets/17861953/86a539b0-c6ca-450b-b409-d91d3e3caf99)
+Tools used:
 
-👇 In this example, it demonstrates that the XML Data Input
-![Screenshot_42](https://github.com/TamerJ/real-time-weather-monitoring-service/assets/17861953/9bc784ee-244d-41b0-a787-7582ccaaddff)
+* `xUnit` for test scaffolding
+* `FluentAssertions` for expressive assertions
+* `coverlet` for coverage tracking
 
-👇 In this example, it demonstrates accepting both XML and JSON Data format
-![image](https://github.com/TamerJ/real-time-weather-monitoring-service/assets/17861953/7e4f9622-ba5f-4deb-adbf-8e9fed38dd2e)
+Run tests via:
 
+```bash
+dotnet test
+```
 
-<h2>Future work</h2>
-<ul>
-  <li>Implement Logs</li>
- <li>Implement Unit Test</li>
-</ul>
+![App-Started.png](./assets/Unit-Test-Sample-Run.png)
+
+## 🛠️ Quick Start
+
+1. Clone the repository
+
+2. Ensure `.NET 6.0+` is installed
+3. Make sure `appsettings.json` is copied to the output directory if newer:
+```xml
+<ItemGroup>
+   <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+   </None>
+</ItemGroup>  
+```
+4. Run the application via CLI:
+
+   ```bash
+   dotnet run
+   ```
+
+5. Enter Weather Data
+   When prompted, enter weather data in **any supported format**:
+
+   ```json
+   { "Location": "Seattle", "Temperature": 32, "Humidity": 40 }
+   ```
+
+   or
+
+   ```xml
+   <WeatherData><Location>Seattle</Location><Temperature>32</Temperature><Humidity>40</Humidity></WeatherData>
+   ```
+
+## 🔮 Future Enhancements
+* Add structured logging
+* CI/CD integration
+* Add real API data ingestion
+* Add Docker support
+

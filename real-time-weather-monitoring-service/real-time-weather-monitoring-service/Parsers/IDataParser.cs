@@ -2,7 +2,7 @@
 
 namespace real_time_weather_monitoring_service.Services;
 
-public interface IDataParserService
+public interface IDataParser
 {
-    WeatherData Parse(string inputData);
+    WeatherData Parse(string input);
 }
