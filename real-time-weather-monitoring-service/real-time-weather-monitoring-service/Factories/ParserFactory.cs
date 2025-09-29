@@ -14,12 +14,6 @@ public static class ParserFactory
         // new YamlFormatDetector() // Add when ready
     };
 
-    public static IDataParser Create(string input)
-    {
-        var type = DetectParserType(input);
-        return Create(type);
-    }
-    
     public static (ParserType Type, IDataParser Parser) CreateWithType(string input)
     {
         var type = DetectParserType(input);
